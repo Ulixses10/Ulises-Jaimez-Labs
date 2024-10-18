@@ -1,5 +1,54 @@
-[gd_scene format=3 uid="uid://dkm4y2xgm20km"]
+[gd_scene load_steps=4 format=3 uid="uid://dkm4y2xgm20km"]
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[ext_resource type="Texture2D" uid="uid://3spxl61nftiq" path="res://icon.svg" id="1_bt050"]
+
+[sub_resource type="GDScript" id="GDScript_jubu1"]
+script/source = "extends CharacterBody2D
+
+
+const max_speed = 400
+const accel = 1500
+const friction = 600
+
+@export var speed_multiplier:float = 1.0
+var input = Vector2.ZERO
+
+
+func _physics_process(delta):
+	player_movement(delta)
+func get_input():
+	input.x = int(Input.is_action_pressed(\"move_right\")) - int(Input.is_action_pressed(\"move_left\"))
+	input.y = int(Input.is_action_pressed(\"move_down\")) - int(Input.is_action_pressed(\"move_up\"))
+	return input.normalized()
+	
+func player_movement(delta):
+		input = get_input()
+		
+		if input == Vector2.ZERO:
+			if velocity.length() > (friction * delta):
+				velocity -= velocity.normalized() * (friction * delta)
+			else: 
+				velocity= Vector2.ZERO
+		else: 
+			velocity += (input * accel *delta)
+			velocity = velocity.limit_length(max_speed)
+			
+		move_and_slide()
+			
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wdat3"]
+size = Vector2(185.962, 136.368)
+
+[node name="Robot Player" type="CharacterBody2D"]
+script = SubResource("GDScript_jubu1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(6, -2)
+scale = Vector2(0.414063, 0.445313)
+texture = ExtResource("1_bt050")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(10, -0.636719)
+scale = Vector2(0.414063, 0.445313)
+shape = SubResource("RectangleShape2D_wdat3")
