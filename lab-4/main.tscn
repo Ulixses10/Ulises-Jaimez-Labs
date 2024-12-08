@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://cnxt0qmtmcnhl"]
+
+[ext_resource type="Script" path="res://character_body_3d.gd" id="1_6jurb"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fk2sn"]
+sky_top_color = Color(0.17303, 0.475755, 0.66973, 1)
+sky_horizon_color = Color(0.556051, 0.665668, 0.736292, 1)
+ground_bottom_color = Color(0.0511729, 0.186919, 0.275436, 1)
+ground_horizon_color = Color(0.556051, 0.665668, 0.736292, 1)
+
+[sub_resource type="Sky" id="Sky_ouqse"]
+sky_material = SubResource("ProceduralSkyMaterial_fk2sn")
+
+[sub_resource type="Environment" id="Environment_q68wk"]
+background_mode = 2
+sky = SubResource("Sky_ouqse")
+tonemap_mode = 2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ojp7x"]
+size = Vector3(1.27686, 2.10062, 2.16724)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_gtt1n"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 200.712)
+size = Vector3(1000, 1, 598.575)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_q68wk")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.807506, 5.4818, 9.20261)
+fov = 101.25
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.34291, 0)
+radius = 3.23628
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="CSGSphere3D"]
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="CSGSphere3D/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.497159, -5.74712, -0.334967)
+outer_radius = 6.0457
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+script = ExtResource("1_6jurb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.494389, 5.21719, 3.29731)
+shape = SubResource("BoxShape3D_ojp7x")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.85535, 3.78284)
+mesh = SubResource("CapsuleMesh_gtt1n")
+skeleton = NodePath("../..")
